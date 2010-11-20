@@ -1,0 +1,241 @@
+/*   
+Theme Name: Wikipedia Illustrated
+Theme URI: 
+Description: The development blog for WikipediaIllustrated.org
+Author: Mushon Zer-Aviv
+Author URI: http://shual.com/
+Template: thematic
+Version: 1.0
+Tags: Thematic, wikipedia, illustration
+.
+Thematic is © Ian Stewart http://themeshaper.com/
+.
+*/
+
+/* Reset browser defaults */
+@import url('../thematic/library/styles/reset.css');
+
+/* Apply basic typography styles */
+@import url('../thematic/library/styles/typography.css');
+
+/* Apply a basic layout */
+/* @import url('../thematic/library/layouts/2c-r-fixed.css'); */
+
+/* Apply basic image styles */
+@import url('../thematic/library/styles/images.css');
+
+/* Apply default theme styles and colors */
+/* It's better to actually copy over default.css into this file (or link to a copy in your child theme) if you're going to do anything outrageous */
+@import url('../thematic/library/styles/default.css');
+
+/* Prepare theme for plugins */
+@import url('../thematic/library/styles/plugins.css');
+
+
+
+body, input, textarea {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+}
+
+a {
+  color: #5777ad;
+}
+
+.clear{
+  clear: both;
+}
+
+/* _________________________________________HEADER____________ */
+
+#header{
+  background: #fff;
+  position: relative;
+  position: fixed;
+  border-bottom: 1px solid #bedff9;
+  width: 100%;
+  -moz-box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+}
+
+.stay{
+}
+
+#branding{
+  width: 950px;
+  padding: 10px 0 0 0;
+  height: 35px;
+  margin:0 auto;
+}
+
+  #blog-title{
+    font-size: 20px;
+  }
+
+#access{
+  height: 38px;
+  width: 950px;
+  margin:0 auto;
+  border-bottom: none;
+}
+
+.menu{
+  font-size: 20px;
+  width: auto;
+}
+  
+  .list-label{
+    float: left;
+    padding:8px 8px 8px 0;
+    color: #555;
+  }
+  
+  .slash{
+    padding:8px;
+  }
+  
+  .sf-menu{
+    border: none;
+    line-height: inherit;
+  }
+  
+    .sf-menu a, .sf-menu a:visited{
+      border: none;
+      padding: 8px 8.3px;
+      color: #5777ad;
+    }
+  
+    .sf-menu span{
+      padding: 8px 8.3px;
+      display:block;
+      position:relative;
+      color: #bbb;
+    }
+    
+  #menu-main-nav{
+    float: right;
+  }
+  
+/* _________________________________________MAIN____________ */
+
+#main {
+  position:relative;
+  top:50px;
+}
+
+#container{
+  width:950px;
+  margin:0 auto;
+}
+
+.post{
+  clear: both;
+}
+
+.left-col{
+  width: 670px;
+  float: right;
+}
+
+  .entry-title{
+    font-family: inherit;
+    font-size: 20px;
+  }
+  
+  .entry-title a{
+    color: #5777ad;
+  }
+  
+  .wp-caption{
+    border: 0;
+    padding: 0;
+    text-align: inherit;
+  }
+    
+    .wp-caption img{
+      border: 0;
+    }
+    
+    .wp-caption p.wp-caption-text {
+      margin: 10px 10px 10px 0;
+      padding: 5px;
+      text-align: center;
+      background: #f3f3f3;
+    }
+
+.entry-utility{
+  width: 230px;
+  margin:0 50px 0 0;
+  padding-top:2px;
+  clear: none;
+  font-size: 16px;
+  line-height: 25px;
+  color: #aaa;
+}
+
+  .entry-utility a{
+    font-style: normal;
+    color: #aaa;
+  }
+  
+  .cat-links a{
+    color: #5777ad;
+  }
+  .cat-links a span{
+    font-weight: bold;
+  }
+  .edit-link{
+    clear: none;
+  }
+
+/* -----------------------------------------CATEGORY */
+
+.category-header{
+  border-bottom: 1px solid #bedff9;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+ 
+.category-text{
+  width: 310px;
+  margin:0 50px 0 0;
+  font-size: 16px;
+  float: left;
+}
+
+  .category-text h1{
+    font-size: 70px;
+    line-height:1em;
+    padding-bottom: 20px;
+  }
+  
+  .category-text h1 span{
+    display: block;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bold;
+    line-height:1em;
+  }
+  
+  .category-text h1 a{
+    font-size: 10px;
+    color: #0645ad;
+    line-height:3em;
+  }
+  
+  .category-text blockquote{
+    margin: 0;
+    color: #000;
+    font-style: normal;
+  }
+  
+.category-image{
+  float: left;
+  margin-top: 24px;
+}
+
+.entry-thumb img.wp-post-image{
+  margin-top: -50px;
+}
