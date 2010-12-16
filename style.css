@@ -36,6 +36,7 @@ body, input, textarea {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   color: #333;
+  background: #F8F8F8;
 }
 
 a, a:hover, a:visited {
@@ -54,7 +55,7 @@ a, a:hover, a:visited {
 /* _________________________________________HEADER____________ */
 
 #header{
-  background: #fff;
+  background: #f8f8f8 url(assets/header_grad.png) repeat-x;
   border-bottom: 1px solid #bedff9;
   width: 100%;
 /*
@@ -68,8 +69,8 @@ a, a:hover, a:visited {
 }
 
 #branding{
-  width: 950px;
-  padding: 10px 0 0 0;
+  width: 910px;
+  padding: 10px 20px 0;
   margin:0 auto;
 }
 
@@ -87,7 +88,8 @@ a, a:hover, a:visited {
 
 #access{
   height: 38px;
-  width: 950px;
+  width: 910px;
+  padding: 0 20px;
   margin:0 auto;
   border-bottom: none;
 }
@@ -112,15 +114,19 @@ a, a:hover, a:visited {
     line-height: inherit;
   }
   
+    .sf-menu li {
+      background: none;
+    }
+  
     .sf-menu a, .sf-menu a:visited{
       border: none;
-      padding: 8px 8.3px;
+      padding: 8px 7.5px;
       color: #5777ad;
       font-size: 20px;
     }
   
     .sf-menu span{
-      padding: 8px 8.3px;
+      padding: 8px 7.5px;
       display:block;
       position:relative;
       color: #bbb;
@@ -131,12 +137,24 @@ a, a:hover, a:visited {
   }
   
 #intro{
-  border-top:1px solid #BEDFF9;
+  /*
+border-top:1px solid #BEDFF9;
   background: #f8f8f8;
+*/
 }
 
 #intro h1{
-  padding: 50px 10px 50px 0px;
+  padding: 50px 10px 50px 20px;
+}
+
+.page-title{
+  padding: 0 20px 20px;
+  font-size: 16px;
+}
+
+.page-title span{
+  font-style: normal;
+  font-weight: bold;
 }
   
 /* _________________________________________MAIN____________ */
@@ -153,7 +171,11 @@ a, a:hover, a:visited {
 
 .post{
   clear: both;
-  padding-top: 40px;
+  padding: 19px;
+  margin-bottom: 20px;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #BEDFF9;
 }
 
 .left-col{
@@ -174,12 +196,11 @@ a, a:hover, a:visited {
   
   .entry-title a,
   .single .entry-title{
-    border-bottom: 1px solid #aaa;
+    border-bottom: 3px solid #F8F8F8;
     display: block;
     font-weight: normal;
+    padding-bottom: 5px;
   }
-  
-  
   
   .wp-caption{
     border: 0;
@@ -195,11 +216,11 @@ a, a:hover, a:visited {
       margin: 10px 10px 10px 0;
       padding: 5px;
       text-align: center;
-      background: #f3f3f3;
+      background: #F8F8F8;
     }
 
 .entry-utility{
-  width: 310px;
+  width: 270px;
   float: left;
   padding-top:2px;
   clear: none;
@@ -263,15 +284,16 @@ a, a:hover, a:visited {
 
 /* -----------------------------------------CATEGORY */
 
-.category-meta .category-header .page-title span,
-.category-meta .category-header .page-title a{
+.category-meta .category-header h1 span,
+.category-meta .category-header h1 a{
   display: none;
 }
 
 .category-header{
-  border-bottom: 1px solid #bedff9;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
+  border-top: 1px solid #bedff9;
+  padding: 20px 0;
+  overflow: auto;
+  background: #fff;
 }
  
 .category-text{
@@ -281,14 +303,14 @@ a, a:hover, a:visited {
   float: right;
 }
 
-  .category-header .page-title{
+  .category-header h1{
     font-size: 50px;
     line-height:1em;
     padding-bottom: 10px;
     color: #222;
   }
   
-  .category-header .page-title span{
+  .category-header h1 span{
     display: block;
     font-size: 18px;
     font-style: normal;
@@ -296,7 +318,7 @@ a, a:hover, a:visited {
     line-height:1em;
   }
   
-  .category-header .page-title a{
+  .category-header h1 a{
     font-size: 10px;
     color: #0645ad;
     line-height:3em;
@@ -334,10 +356,16 @@ body.single #container{
   width: 100%;
 }
 
-body.single #content>*{
+body.single #content .navigation,
+body.single #content .post{
   width: 950px;
   margin-left: auto;
   margin-right: auto;
+}
+
+body.single #content .post{
+  width: 910px;
+  padding: 19px;
 }
 
 body.single .category-header{
@@ -362,14 +390,14 @@ body.single .category-header .container{
   display: block;
 }
 
-  body.single .category-header .page-title{
+  body.single .category-header h1{
     font-size: 16px;
     display: inline;
     padding: 0;
     font-weight: bold;
   }
   
-  body.single .category-header .page-title span{
+  body.single .category-header h1 span{
     display: inline;
     font-size: 16px;
     font-style: normal;
@@ -391,6 +419,7 @@ body.single .category-header .container{
   
 body.single #container #content #comments{
   width: 100%;
+  background: #fff;
   border-top: 1px solid #bedff9; 
 }
   

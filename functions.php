@@ -101,13 +101,13 @@ function remove_thematic_headerstuff() {
 add_action('init','remove_thematic_headerstuff');
 
 // Build a custom menu for articles/letters:
-function childtheme_header_extension() { ?>
-  
-  <?php
+function childtheme_header_extension() {
+
   if ( function_exists( 'add_theme_support' ) ) {
   
   	// This theme uses wp_nav_menu()
   	add_theme_support( 'nav-menus' );
+  }
   	?>
   	
     <div id="access">
@@ -146,45 +146,42 @@ function childtheme_header_extension() { ?>
   global $post;
   
   $content = '';
-  if(is_home()){
-    ?>
-    <div id="intro">
-      <div class="container">
-        <h1><?php bloginfo('description'); ?> </h1>
-      </div>
-    </div>
-    <?php
-/*
-	} elseif(is_single()){
-    $cat = get_the_category();
-    $article_title = get_post_meta($post->ID, 'article_title', true);
-    if (!$article_title){
-      $article_title = get_latest_in_cat($cat[0]->cat_name, 'article_title');
-    }
-    $article_quote = get_post_meta($post->ID, 'article_quote', true);
-    if (!$article_quote){
-      $article_quote = get_latest_in_cat($cat[0]->cat_name, 'article_quote');
-    }
+  if(is_category()) {
     
-    $content .= '<div class="category-header">';
-    $content .= '<a href="' . get_category_link( $cat[0]->cat_ID ) . '" class="container">';
-		$content .= '<span class="page-title">';
-		$content .= $cat[0]->cat_name;
-		$content .= ': <span>';
-		$content .= $article_title;
-		$content .= '</span>' . "\n";
-		$content .= '</span> - ' . "\n";
-		$content .= '<span class="article-quote">';
-		//Truncate the quote:
-		$content .= myTruncate($article_quote, 100, ' ', '&hellip;');
-		$content .= '</span>';
-		$content .= '</a>';
-		$content .= '</div>';
-*/
-	}
-
-  $content .= "\n";
-  echo $content;
+    $cat = get_the_category();
+    $wiki_name = get_latest_in_cat($cat[0]->cat_name, 'wiki_name');
+    if($wiki_name){
+  		$wiki_url = 'Wikipedia.org/wiki/' . $wiki_name;
+    } else {
+      $wiki_url = 'Wikipedia.org';
+    }
+    $article_name = get_latest_in_cat($cat[0]->cat_name, 'article_title');
+    if(!$article_name){
+      $article_name = "Haven't chosen one yet";
+    }
+		
+    $cat_head = '<div class="category-header">';
+    $cat_head.= '<div class="container">';
+    $cat_head.= '<div class="category-text">';
+		$cat_head.= '<h1>';
+		$cat_head.= single_cat_title('', FALSE);
+		$cat_head.= ': <span>';
+		$cat_head.= $article_name;
+		$cat_head.= '</span>' . "\n";
+		$cat_head.= '<a href="http://en.' .$wiki_url . '" target="blank" class="wiki_link">' . $wiki_url . '</a>';
+		$cat_head.= '</h1>' . "\n";
+		$cat_head.= '<blockquote class="article-quote">';
+		$cat_head.= get_latest_in_cat($cat[0]->cat_name, 'article_quote');
+		$cat_head.= '</blockquote>';
+		$cat_head.= get_prev_ops($cat[0]->cat_name);
+		$cat_head.= '</div>';
+    $cat_head.= '<div class="category-image">';
+		$cat_head.= get_latest_cat_img($cat[0]->cat_name, 'medium');
+		$cat_head.= '</div>';
+		$cat_head.= '</div>';
+		$cat_head.= '</div>';
+    
+    echo $cat_head;
 	}
 }	
 add_action('thematic_header','childtheme_header_extension',10);
@@ -198,6 +195,20 @@ function childtheme_content() {
   }
 }
 //add_filter('thematic_content','childtheme_content');
+
+function childtheme_belowheader(){
+  if(is_home()){
+    ?>
+    <div id="intro">
+      <div class="container">
+        <h1><?php bloginfo('description'); ?> </h1>
+      </div>
+    </div>
+    <?php
+	}
+}
+	
+add_action('thematic_belowheader','childtheme_belowheader');
 
 // ---------------------------------------------------------------- Post Structure:
 
@@ -223,7 +234,7 @@ function childtheme_postfooter() {
   if(!is_page()){?>
     </div>
   	<div class="entry-utility meta">
-      <?php //if(is_home()){ ?>
+      <?php if(!is_category()){ ?>
         <div class="cat-links"><?php $cat = get_the_category(); echo '
         <a href="' . get_category_link($cat[0]->cat_ID) . '"><span>' . $cat[0]->cat_name . ':</span> ' . get_latest_in_cat($cat[0]->cat_name, article_title) ?></a></div>
           <?php 
@@ -231,7 +242,7 @@ function childtheme_postfooter() {
           if ($article_quote){
             echo '<div class="article-quote">' . $article_quote . '</div>';
           }?>
-      <?php //} ?>
+      <?php } ?>
   		<?php the_tags( __( '<span class="tag-links">', 'sandbox' ), " ", "</span>" ) ?>
   		<div class="date"><?php the_time('M jS, Y'); ?></div>
   		<div class="comments-link"><?php comments_popup_link( __( 'No Comments', 'sandbox' ), __( '1 Comment', 'sandbox' ), __( '% Comments', 'sandbox' ) ) ?></div>
@@ -244,51 +255,33 @@ add_filter ('thematic_postfooter', 'childtheme_postfooter');
 
 // ---------------------------------------------------------------- Category titles:
   
-// Retrieve previous naming options:
+/*
+if you want to preserve original data (for instance for is_tag and others then you need to pass the $variable you are filtering from the parent function to the child function in the function paramets aka.... in the parens
+*/
 
-function childtheme_override_page_title(){
-
-  global $post;
+function childtheme_page_title($content){
   
-  $content = '';
   if (is_category()) {
-    $cat = get_the_category();
-    $wiki_name = get_latest_in_cat($cat[0]->cat_name, 'wiki_name');
-    if($wiki_name){
-  		$wiki_url = 'Wikipedia.org/wiki/' . $wiki_name;
-    } else {
-      $wiki_url = 'Wikipedia.org';
-    }
-    $article_name = get_latest_in_cat($cat[0]->cat_name, 'article_title');
-    if(!$article_name){
-      $article_name = "Haven't chosen one yet";
-    }
-		
-    $content .= '<div class="category-header">';
-    $content .= '<div class="category-text">';
-		$content .= '<h1 class="page-title">';
-		$content .= single_cat_title('', FALSE);
-		$content .= ': <span>';
-		$content .= $article_name;
-		$content .= '</span>' . "\n";
-		$content .= '<a href="http://en.' .$wiki_url . '" target="blank" class="wiki_link">' . $wiki_url . '</a>';
-		$content .= '</h1>' . "\n";
-		$content .= '<blockquote class="article-quote">';
-		$content .= get_latest_in_cat($cat[0]->cat_name, 'article_quote');
-		$content .= '</blockquote>';
-		$content .= get_prev_ops($cat[0]->cat_name);
-		$content .= '</div>';
-    $content .= '<div class="category-image">';
-		$content .= get_latest_cat_img($cat[0]->cat_name, 'medium');
-		$content .= '</div>';
-		$content .= '<br class="clear"/>';
-		$content .= '</div>';
-	} 
-
-  $content .= "\n";
-  echo apply_filters('childtheme_override_page_title', $content);
+    /*note in this case you must get rid of the .= here and replace it with = or else you will get double results. the .= just means that you are adding something on the end of the existing variable and the variable was already defined in the parent function*/
+    $content = '<h1 class="page-title">';
+    $content .= __('Drafts for the letter', 'thematic');
+    $content .= ' <span>';
+    $content .= single_cat_title('', FALSE);
+    $content .= '</span>:</h1>' . "\n";
+    $content .= '<div class="archive-meta">';
+    if ( !(''== category_description()) ) : $content .= apply_filters('archive_meta', category_description()); endif;
+    $content .= '</div>';
+  }
   
+  $content .= "\n";
+  
+  /*when filter you must always end your function w RETURN $variable or else nothing gets sent back to the parent function */
+  
+  return $content;
 }
+
+add_filter('thematic_page_title','childtheme_page_title');
+
 
 function get_prev_ops($cat){
   $args = array(
