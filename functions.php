@@ -154,6 +154,7 @@ function childtheme_header_extension() { ?>
       </div>
     </div>
     <?php
+/*
 	} elseif(is_single()){
     $cat = get_the_category();
     $article_title = get_post_meta($post->ID, 'article_title', true);
@@ -179,6 +180,7 @@ function childtheme_header_extension() { ?>
 		$content .= '</span>';
 		$content .= '</a>';
 		$content .= '</div>';
+*/
 	}
 
   $content .= "\n";
@@ -221,13 +223,15 @@ function childtheme_postfooter() {
   if(!is_page()){?>
     </div>
   	<div class="entry-utility meta">
-      <?php if(is_home()){ ?>
+      <?php //if(is_home()){ ?>
         <div class="cat-links"><?php $cat = get_the_category(); echo '
         <a href="' . get_category_link($cat[0]->cat_ID) . '"><span>' . $cat[0]->cat_name . ':</span> ' . get_latest_in_cat($cat[0]->cat_name, article_title) ?></a></div>
-        <div class="article-quote">
-          <?php echo get_latest_in_cat($cat[0]->cat_name, article_quote) ?>
-        </div>
-      <?php } ?>
+          <?php 
+          $article_quote = get_latest_in_cat($cat[0]->cat_name, article_quote);
+          if ($article_quote){
+            echo '<div class="article-quote">' . $article_quote . '</div>';
+          }?>
+      <?php //} ?>
   		<?php the_tags( __( '<span class="tag-links">', 'sandbox' ), " ", "</span>" ) ?>
   		<div class="date"><?php the_time('M jS, Y'); ?></div>
   		<div class="comments-link"><?php comments_popup_link( __( 'No Comments', 'sandbox' ), __( '1 Comment', 'sandbox' ), __( '% Comments', 'sandbox' ) ) ?></div>

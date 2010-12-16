@@ -136,7 +136,7 @@ a, a:hover, a:visited {
 }
 
 #intro h1{
-  padding: 50px 10px 50px 360px;
+  padding: 50px 10px 50px 0px;
 }
   
 /* _________________________________________MAIN____________ */
@@ -153,22 +153,33 @@ a, a:hover, a:visited {
 
 .post{
   clear: both;
+  padding-top: 40px;
 }
 
 .left-col{
   width: 590px;
-  margin-left: 50px;
-  float: right;
+  margin-right: 50px;
+  float: left;
 }
+
+  .entry-content {
+    padding-top: 0;
+  }
 
   .entry-title{
     font-family: inherit;
     font-size: 20px;
+    margin-bottom: 10px;
   }
   
-  .entry-title a{
-    color: #5777ad;
+  .entry-title a,
+  .single .entry-title{
+    border-bottom: 1px solid #aaa;
+    display: block;
+    font-weight: normal;
   }
+  
+  
   
   .wp-caption{
     border: 0;
@@ -188,8 +199,8 @@ a, a:hover, a:visited {
     }
 
 .entry-utility{
-  width: 230px;
-  margin:0 50px 0 0;
+  width: 310px;
+  float: left;
   padding-top:2px;
   clear: none;
   font-size: 13px;
@@ -202,9 +213,36 @@ a, a:hover, a:visited {
     color: #aaa;
   }
   
+  .cat-links {
+    border-bottom: 1px solid #aaa;
+  }
+  
+  .cat-links a{
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .cat-links a span{
+    font-weight: bold;
+    font-size: 20px;
+    display: block;
+  }
+  
   .entry-utility .article-quote{
     font-style: normal;
-    color: #aaa;
+    color: #666;
+    font-size: 13px;
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 5px;
+  }
+  
+  .entry-utility .article-quote p{
+    margin-bottom: 5px;
+  }
+  
+  .entry-utility .article-quote a,
+  .entry-utility .article-quote a:hover{
+    color: #666;
   }
 
   .tag-links a{  
@@ -212,13 +250,6 @@ a, a:hover, a:visited {
     margin-right:10px;
   }
   
-  .cat-links a{
-    color: #5777ad;
-    font-size: 16px;
-  }
-  .cat-links a span{
-    font-weight: bold;
-  }
   .edit-link{
     clear: none;
   }
@@ -245,15 +276,15 @@ a, a:hover, a:visited {
  
 .category-text{
   width: 310px;
-  margin:0 50px 0 0;
+  margin-left: 50px;
   font-size: 16px;
-  float: left;
+  float: right;
 }
 
   .category-header .page-title{
     font-size: 50px;
     line-height:1em;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     color: #222;
   }
   
@@ -272,9 +303,10 @@ a, a:hover, a:visited {
   }
   
   .category-header .article-quote{
-    margin: 0;
-    color: #444;
-    font-style: normal;
+    color:#444444;
+    font-style:normal;
+    margin:0 0 20px;
+    padding:10px 0 0;  
   }
   
   .category-header ul#previous_options{
@@ -289,6 +321,7 @@ a, a:hover, a:visited {
 
 .entry-thumb img.wp-post-image{
   margin-top: -50px;
+  background: #fff;
 }
 
 /* -----------------------------------------POST */
@@ -368,18 +401,19 @@ body.single #container #content #comments>*{
 }
 
 #comments h2.callForAction{
-  margin-left: 280px;
+  margin-left: 160px;
   font-size: 20px;
   font-weight: bold;
   padding: 5px;
 }
 
 #comments h3 {
-  color:#777777;
-  font-size:15px;
-  font-weight:normal;
-  margin-left:280px;
-  padding:5px;
+  color: #777777;
+  font-size: 15px;
+  font-weight: normal;
+  width: 230px;
+  padding: 5px 0;
+  text-align: right;
 }
 
 #comments-list li.bypostauthor {
@@ -408,7 +442,7 @@ body.single #container #content #comments>*{
 }
 
 .comment-reply-link{
-  padding:0 0 10px;
+  padding: 0 0 10px;
   z-index: 1;
   clear: both;
 }
@@ -479,7 +513,7 @@ body.single #container #content #comments>*{
 
 
 #comments-list .comment-meta{
-  width: 270px;
+  width: 230px;
   float: left;
   padding: 0;
 }
@@ -519,15 +553,15 @@ body.single #container #content #comments>*{
 #respond p.comment-notes{
   margin-bottom:-300px;
   text-align:right;
-  width:270px;
+  width:230px;
 }
 
 
 #respond .form-section{
   margin-left:15px;
   margin-right:75px;
-  width:590px;
-  margin-left: 285px;
+  width: 630px;
+  margin-left: 245px;
   float: left;
 }
 
