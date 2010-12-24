@@ -81,6 +81,7 @@ function myTruncate($string, $limit, $break=".", $pad="&hellip;") {
   return $string;  
 }
 
+
 // Set the linked image size to large:
 /*
 function my_image_tag_class($class){
@@ -100,7 +101,13 @@ function remove_thematic_headerstuff() {
 }
 add_action('init','remove_thematic_headerstuff');
 
+function childtheme_header_container(){
+  ?><div class="container"><?php
+}
+add_action('thematic_header','childtheme_header_container',0);
+
 // Build a custom menu for articles/letters:
+
 function childtheme_header_extension() {
 
   if ( function_exists( 'add_theme_support' ) ) {
@@ -115,7 +122,7 @@ function childtheme_header_extension() {
         <div class="list-label">Articles:</div>
         <ul id="letters" class="sf-menu sf-js-enabled">
           <?php
-          $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "V", "U", "W", "X", "Y", "Z");
+          $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "V", "U", "W", "X", "Y", "Z");     
           foreach ($letters as $letter) {
             //make the LI item anyway
             $item = "<li class='menu-item menu-item-type-post_type menu-item-" . $letter . "' id='menu-item-" . $letter . "'>";
@@ -136,17 +143,18 @@ function childtheme_header_extension() {
           }
           ?>
         </ul>
-        <div class="list-label slash">/</div>
-  		  <?php wp_nav_menu( 'sort_column=menu_order&container_class=menu&menu_class=sf-menu' ); ?>
-  		</div>
+        <!-- <div class="list-label slash">/</div> -->
 		</div>
-		<!-- #access -->
+        
+  		  <?php wp_nav_menu( 'sort_column=menu_order&container_class=menu&menu_class=sf-menu' ); ?>
+  		</div><!-- #access -->
+		</div> <!-- .container -->
   
 	<?php
   global $post;
   
   $content = '';
-  if(is_category()) {
+  if(is_category($letters)) {
     
     $cat = get_the_category();
     $wiki_name = get_latest_in_cat($cat[0]->cat_name, 'wiki_name');
@@ -163,16 +171,17 @@ function childtheme_header_extension() {
     $cat_head = '<div class="category-header">';
     $cat_head.= '<div class="container">';
     $cat_head.= '<div class="category-text">';
-		$cat_head.= '<h1>';
+		$cat_head.= '<h1><span>';
 		$cat_head.= single_cat_title('', FALSE);
-		$cat_head.= ': <span>';
+		$cat_head.= ': </span>';
 		$cat_head.= $article_name;
-		$cat_head.= '</span>' . "\n";
+		$cat_head.= '' . "\n";
 		$cat_head.= '<a href="http://en.' .$wiki_url . '" target="blank" class="wiki_link">' . $wiki_url . '</a>';
 		$cat_head.= '</h1>' . "\n";
 		$cat_head.= '<blockquote class="article-quote">';
 		$cat_head.= get_latest_in_cat($cat[0]->cat_name, 'article_quote');
 		$cat_head.= '</blockquote>';
+		$cat_head.= '<a href="http://wikipedia.org/wiki/' . $wiki_name .'" target="blank" class="wikilink">wikipedia.org/wiki/' . $wiki_name . ' </a>';
 		$cat_head.= get_prev_ops($cat[0]->cat_name);
 		$cat_head.= '</div>';
     $cat_head.= '<div class="category-image">';
@@ -182,9 +191,67 @@ function childtheme_header_extension() {
 		$cat_head.= '</div>';
     
     echo $cat_head;
+    
+  	add_filter('thematic_page_title','childtheme_page_title');
+
 	}
+	
 }	
 add_action('thematic_header','childtheme_header_extension',10);
+
+
+// ---------------------------------------------------------------- Category specific:
+
+function childtheme_page_title($content){
+  
+  if (is_category($letters)) {
+    /*note in this case you must get rid of the .= here and replace it with = or else you will get double results. the .= just means that you are adding something on the end of the existing variable and the variable was already defined in the parent function*/
+    $content = '<h1 class="page-title">';
+    $content .= __('Drafts for the letter', 'thematic');
+    $content .= ' <span>';
+    $content .= single_cat_title('', FALSE);
+    $content .= '</span>:</h1>' . "\n";
+    $content .= '<div class="archive-meta">';
+    if ( !(''== category_description()) ) : $content .= apply_filters('archive_meta', category_description()); endif;
+    $content .= '</div>';
+  }
+  
+  $content .= "\n";
+  
+  /*when filter you must always end your function w RETURN $variable or else nothing gets sent back to the parent function */
+  
+  return $content;
+}
+
+
+
+function get_prev_ops($cat){
+  $args = array(
+    'category_name' => $cat,
+    'meta_key' => 'wiki_name',
+    'offset' => 1
+    );
+  $myposts = get_posts($args);
+  if ($myposts){
+    $prev  = "<h3>Other Options for this letter:</h3>";
+    $prev .= "<ul id='previous_options'>";
+      foreach($myposts as $post) {
+        $prev .= "<li><strong>" . $cat . ":</strong> <a href='" . get_permalink($post->ID) . "'>";
+        $prev .= get_post_meta($post->ID, article_title, true);
+        $prev .= "</a></li>";
+      }
+    $prev .= "</ul>";
+    return $prev;
+  } else {
+    return "";
+  }
+}
+
+
+function child_post_thumb() {
+    return array(200,200);
+}
+add_filter('thematic_post_thumb_size','child_post_thumb');
 
 // ---------------------------------------------------------------- Home Page:
 
@@ -239,8 +306,9 @@ function childtheme_postfooter() {
         <a href="' . get_category_link($cat[0]->cat_ID) . '"><span>' . $cat[0]->cat_name . ':</span> ' . get_latest_in_cat($cat[0]->cat_name, article_title) ?></a></div>
           <?php 
           $article_quote = get_latest_in_cat($cat[0]->cat_name, article_quote);
+          $wiki_name = get_latest_in_cat($cat[0]->cat_name, wiki_name);
           if ($article_quote){
-            echo '<div class="article-quote">' . $article_quote . '</div>';
+            echo '<div class="article-quote">' . $article_quote . '</div><a href="http://wikipedia.org/wiki/' . $wiki_name .'" target="blank" class="wikilink">wikipedia.org/wiki/' . $wiki_name . ' </a>';
           }?>
       <?php } ?>
   		<?php the_tags( __( '<span class="tag-links">', 'sandbox' ), " ", "</span>" ) ?>
@@ -253,63 +321,35 @@ function childtheme_postfooter() {
 }
 add_filter ('thematic_postfooter', 'childtheme_postfooter');
 
-// ---------------------------------------------------------------- Category titles:
-  
-/*
-if you want to preserve original data (for instance for is_tag and others then you need to pass the $variable you are filtering from the parent function to the child function in the function paramets aka.... in the parens
-*/
+// ---------------------------------------------------------------- Post navigation:
 
-function childtheme_page_title($content){
-  
-  if (is_category()) {
-    /*note in this case you must get rid of the .= here and replace it with = or else you will get double results. the .= just means that you are adding something on the end of the existing variable and the variable was already defined in the parent function*/
-    $content = '<h1 class="page-title">';
-    $content .= __('Drafts for the letter', 'thematic');
-    $content .= ' <span>';
-    $content .= single_cat_title('', FALSE);
-    $content .= '</span>:</h1>' . "\n";
-    $content .= '<div class="archive-meta">';
-    if ( !(''== category_description()) ) : $content .= apply_filters('archive_meta', category_description()); endif;
-    $content .= '</div>';
-  }
-  
-  $content .= "\n";
-  
-  /*when filter you must always end your function w RETURN $variable or else nothing gets sent back to the parent function */
-  
-  return $content;
-}
-
-add_filter('thematic_page_title','childtheme_page_title');
-
-
-function get_prev_ops($cat){
-  $args = array(
-    'category_name' => $cat,
-    'meta_key' => 'wiki_name',
-    'offset' => 1
-    );
-  $myposts = get_posts($args);
-  if ($myposts){
-    $prev  = "<h3>Other Options for this letter:</h3>";
-    $prev .= "<ul id='previous_options'>";
-      foreach($myposts as $post) {
-        $prev .= "<li><strong>" . $cat . ":</strong> <a href='" . get_permalink($post->ID) . "'>";
-        $prev .= get_post_meta($post->ID, article_title, true);
-        $prev .= "</a></li>";
-      }
-    $prev .= "</ul>";
-    return $prev;
-  } else {
-    return "";
+function new_prev_nav_args() {
+  if(is_single()){
+    $args = array ('format'              => '%link',
+									 'link'                => '<span class="meta-nav">&laquo; Earlier draft for this letter</span> %title',
+									 'in_same_cat'         => TRUE,
+									 'excluded_categories' => '');
+		//reset for the meta category		
+    if (in_category('meta')) { $args['link'] = '<span class="meta-nav meta-cat">&laquo;</span> %title';}
+		return $args;
   }
 }
 
+add_filter('thematic_previous_post_link_args', 'new_prev_nav_args');
 
-function child_post_thumb() {
-    return array(200,200);
+function new_next_nav_args() {
+  if(is_single()){
+    $args = array ('format'              => '%link',
+									 'link'                => '<span class="meta-nav">Newer draft for this letter &raquo;</span> %title',
+									 'in_same_cat'         => TRUE,
+									 'excluded_categories' => '');
+		//reset for the meta category
+    if (in_category('meta')) { $args['link'] = '%title <span class="meta-nav meta-cat">&raquo;</span>';}
+		return $args;
+  }
 }
-add_filter('thematic_post_thumb_size','child_post_thumb');
+
+add_filter('thematic_next_post_link_args', 'new_next_nav_args');
 
 // ---------------------------------------------------------------- Comments:
 
@@ -365,4 +405,58 @@ function child_remove_widget_area() {
   unregister_sidebar('primary-aside');
 }
 add_action( 'admin_init', 'child_remove_widget_area');
+
+// ---------------------------------------------------------------- JS:
+
+
+function custom_js(){
+  //Add the shorten features (truncating text the JS way)
+
+  ?>
+  <script type="text/javascript" src="<?php bloginfo('stylesheet_directory')?>/js/jquery.jtruncate.pack.js"></script>
+  <script type="text/javascript">
+    jQuery(document).ready(function(){
+      jQuery(".post .article-quote").jTruncate({  
+        length: 400,  
+        minTrail: 90,  
+        moreText: "[read on]",  
+        lessText: "[fold back]",  
+        /* ellipsisText: " (truncated)",   */
+        moreAni: "fast",  
+        lessAni: "fast"
+      }); 
+    });
+  
+  </script>
+  <?php
+
+  //Remove alt tags for the menu using javascript
+  ?>
+  <script type="text/javascript">
+  
+    jQuery(document).ready(function(){
+  
+      jQuery("a.fancybox img").each(function(){
+        jQuery(this).after(' <p class="enlarge">click to enlarge</p>');
+      }),
+      
+      jQuery("a.fancybox img").each(function(){
+        jQuery(this).parent().width(jQuery(this).outerWidth());
+      }),
+      
+      jQuery("img.alignright").each(function(){
+        jQuery(this).parent().addClass('a-right');
+      }),
+      
+      jQuery("img.alignleft").each(function(){
+        jQuery(this).parent().addClass('a-left');
+      })
+    });
+  
+  </script>
+  <?php
+}
+add_filter('wp_head','custom_js');
+
+
 ?>

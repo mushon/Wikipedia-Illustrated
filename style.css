@@ -34,13 +34,17 @@ Thematic is © Ian Stewart http://themeshaper.com/
 
 body, input, textarea {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   color: #333;
   background: #F8F8F8;
 }
 
-a, a:hover, a:visited {
+a, a:visited {
   color: #5777ad;
+}
+
+a:hover{
+  color: #153988;
 }
 
 .container{
@@ -58,6 +62,7 @@ a, a:hover, a:visited {
   background: #f8f8f8 url(assets/header_grad.png) repeat-x;
   border-bottom: 1px solid #bedff9;
   width: 100%;
+  overflow: auto;
 /*
   -moz-box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
@@ -65,19 +70,30 @@ a, a:hover, a:visited {
 */
 }
 
+#blog-title a{
+  background: url(assets/wikipediaillustrated_logo.png) no-repeat;
+  height: 80px;
+  width: 120px;
+  display: block;
+  text-indent: -8000px;
+  padding: 10px;
+}
+
 .stay{
 }
 
 #branding{
-  width: 910px;
-  padding: 10px 20px 0;
-  margin:0 auto;
+  float:left;
+  margin:0;
+  padding: 0 10px 0 20px;
+  width:120px;
 }
 
   #blog-title{
     font-size: 20px;
     /* float: left; */
     padding-right: 10px;
+    float: left;
   }
   
   #blog-description {
@@ -88,10 +104,12 @@ a, a:hover, a:visited {
 
 #access{
   height: 38px;
-  width: 910px;
-  padding: 0 20px;
+  width: 770px;
+  padding: 39px 0 0 20px;
   margin:0 auto;
   border-bottom: none;
+  float: left;
+  font-family: Georgia, "Times New Roman", Serif;
 }
 
 .menu{
@@ -100,9 +118,10 @@ a, a:hover, a:visited {
 }
   
   .list-label{
-    float: left;
-    padding:8px 8px 8px 0;
+    font-size: 13px;
+    padding: 8px;
     color: #555;
+    display: none;
   }
   
   .slash{
@@ -116,35 +135,40 @@ a, a:hover, a:visited {
   
     .sf-menu li {
       background: none;
+      font-size: 18px;
+    }
+  
+    .sf-menu span,
+    .sf-menu a,
+    .windows .sf-menu a{
+      padding: 8px 7.3px;
+      display:block;
+      position:relative;
+      color: #bbb;
+      font-size: 18px;
     }
   
     .sf-menu a, .sf-menu a:visited{
       border: none;
-      padding: 8px 7.5px;
       color: #5777ad;
-      font-size: 20px;
-    }
-  
-    .sf-menu span{
-      padding: 8px 7.5px;
-      display:block;
-      position:relative;
-      color: #bbb;
-    }
+     }
     
   #menu-main-nav{
     float: right;
   }
   
-#intro{
-  /*
-border-top:1px solid #BEDFF9;
-  background: #f8f8f8;
-*/
+#intro, #main{
+  background: url(assets/body_grad.png) repeat-x;
 }
 
+  .home #main{
+    background: none;
+  }
+
 #intro h1{
-  padding: 50px 10px 50px 20px;
+  padding: 50px 10px 30px 20px;
+  font-size:17.5px;
+  line-height: 1.5em;
 }
 
 .page-title{
@@ -162,6 +186,7 @@ border-top:1px solid #BEDFF9;
 #main {
   position:relative;
   padding-top: 20px;
+  padding-bottom: 0;
 }
 
 #container{
@@ -202,6 +227,19 @@ border-top:1px solid #BEDFF9;
     padding-bottom: 5px;
   }
   
+  .sf-menu a:hover,
+  .sf-menu a:active,
+  .entry-title a:hover,
+  .entry-title a:active,
+  .entry-utility a:hover,
+  .entry-utility a:active,
+  .aside a:hover,
+  .aside a:active,
+  #siteinfo a:hover,
+  #siteinfo a:active{
+    color: #153988;
+  }
+  
   .wp-caption{
     border: 0;
     padding: 0;
@@ -213,10 +251,11 @@ border-top:1px solid #BEDFF9;
     }
     
     .wp-caption p.wp-caption-text {
-      margin: 10px 10px 10px 0;
       padding: 5px;
-      text-align: center;
-      background: #F8F8F8;
+      background: none;
+      margin: -22px 10px 10px 0;
+      display: block;
+      border-bottom: 3px solid #F8F8F8;
     }
 
 .entry-utility{
@@ -244,7 +283,7 @@ border-top:1px solid #BEDFF9;
   }
   
   .cat-links a span{
-    font-weight: bold;
+    /* font-family: Georgia, "Times New Roman", Serif; */
     font-size: 20px;
     display: block;
   }
@@ -254,7 +293,9 @@ border-top:1px solid #BEDFF9;
     color: #666;
     font-size: 13px;
     border-bottom: 1px solid #aaa;
-    margin-bottom: 5px;
+    line-height:1.5em;
+    margin-bottom:5px;
+    padding:10px 0;
   }
   
   .entry-utility .article-quote p{
@@ -264,6 +305,17 @@ border-top:1px solid #BEDFF9;
   .entry-utility .article-quote a,
   .entry-utility .article-quote a:hover{
     color: #666;
+  }
+  
+  a.wikilink{
+    background: url(assets/wikipedia-icon.png);
+    width: 40px;
+    height: 40px;
+    display: block;
+    float: right;
+    text-indent: -999999px;
+    margin-right:10px;
+    margin-top:-30px;
   }
 
   .tag-links a{  
@@ -281,6 +333,19 @@ border-top:1px solid #BEDFF9;
     border: 1px solid #eee;
     padding: 4px;
   }
+  
+/* -----------------------------------------PAGE */
+  
+.page .hentry{
+  background:none repeat scroll 0 0 #FFFFFF;
+  border:1px solid #EEEEEE;
+  margin:0 160px 20px;
+  padding:19px 19px 22px;
+}
+
+.page .entry-title{
+  font-weight: normal;
+}
 
 /* -----------------------------------------CATEGORY */
 
@@ -294,41 +359,49 @@ border-top:1px solid #BEDFF9;
   padding: 20px 0;
   overflow: auto;
   background: #fff;
+  clear: both;
 }
  
 .category-text{
   width: 310px;
   margin-left: 50px;
-  font-size: 16px;
+  font-size: 14px;
   float: right;
 }
 
-  .category-header h1{
-    font-size: 50px;
-    line-height:1em;
-    padding-bottom: 10px;
+  .category-header h1 span{
+    font-size: 45px;
+    padding-bottom: 15px;
     color: #222;
+    font-weight: normal;
+    display: block;
+    margin-top: 20px;
+    /* font-family: Georgia, "Times New Roman", Serif; */
   }
   
-  .category-header h1 span{
-    display: block;
+  .category-header h1{
+    line-height:1em;
     font-size: 18px;
     font-style: normal;
     font-weight: bold;
-    line-height:1em;
   }
   
   .category-header h1 a{
     font-size: 10px;
     color: #0645ad;
     line-height:3em;
+    display: block;
+    font-weight: normal;
   }
   
   .category-header .article-quote{
     color:#444444;
     font-style:normal;
-    margin:0 0 20px;
-    padding:10px 0 0;  
+    margin:0 0 5px;
+    padding:10px 0;
+    border-color:#AAAAAA;
+    border-style:solid;
+    border-width:1px 0;
   }
   
   .category-header ul#previous_options{
@@ -415,12 +488,22 @@ body.single .category-header .container{
     margin: 0;
   }
  
+.navigation .meta-nav {
+  color:#AAAAAA;
+  display:block;
+}
+ 
+.navigation .meta-cat {
+  display:inline;
+}
+ 
 /* -----------------------------------------COMMENTS */
   
 body.single #container #content #comments{
   width: 100%;
   background: #fff;
-  border-top: 1px solid #bedff9; 
+  border-top: 1px solid #bedff9;
+  overflow: auto;
 }
   
 body.single #container #content #comments>*{
@@ -679,6 +762,7 @@ input#submit:hover{
 
 #footer{
   clear:both;
+  margin-top: 0;
 }
 
 #subsidiary,
@@ -696,4 +780,55 @@ input#submit:hover{
 
 #subsidiary #third{
   margin-right: 0;
+}
+
+/* -----------------------------------------JS */
+
+a.fancybox .enlarge{
+  background: url(assets/enlarge.png) right top no-repeat;
+  height: 20px;
+  text-indent: -200000px;
+  display: block;
+  margin-right: 0px;
+  padding-right: 20px;
+  border: 0;
+  font-size: 12px;
+  color: #aaa;
+}
+
+a.fancybox:hover .enlarge{
+  background-position: right bottom;
+  text-indent: 0;
+  text-align: right;
+}
+
+a.fancybox{
+  display: block;
+  text-decoration:none;
+}
+
+a.fancybox img{
+  margin-bottom: 5px;
+}
+
+a.a-right,
+a.a-left{
+  display: block;
+  width: auto !important;
+}
+
+a.a-right .enlarge,
+a.a-left .enlarge{
+  display: none;
+}
+
+#fancy_title table,
+#fancy_title tr{
+  border: 0;
+}
+
+/* -----------------------------------------BROWSER HACKS */
+
+.windows .entry-utility {
+  width: 269px;
 }
