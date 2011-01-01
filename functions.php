@@ -93,6 +93,20 @@ add_filter('get_image_tag_class','my_image_tag_class');
 
 // ----------------------------------------------------------------  HEADER:
 
+// Remove description from doctitle:
+
+function homeDocTitle($content){
+  if ( is_home() || is_front_page() ){
+    $content = get_bloginfo('name') . " | Drafting a new path towards visual free culture";
+  } elseif ( is_category() && !is_category('meta') ) {
+    $content = get_bloginfo('name') . " | ";
+    $content .= __('Drafts for the Letter "', 'thematic');
+    $content .= single_cat_title("", false) . '"';
+  }
+  return $content;
+}
+add_filter('thematic_doctitle', 'homeDocTitle');
+
 //Remove Blog Description
  
 function remove_thematic_headerstuff() {
@@ -181,11 +195,23 @@ function childtheme_header_extension() {
 		$cat_head.= '<blockquote class="article-quote">';
 		$cat_head.= get_latest_in_cat($cat[0]->cat_name, 'article_quote');
 		$cat_head.= '</blockquote>';
-		$cat_head.= '<a href="http://wikipedia.org/wiki/' . $wiki_name .'" target="blank" class="wikilink">wikipedia.org/wiki/' . $wiki_name . ' </a>';
+		$cat_head.= '<a href="http://wikipedia.org/wiki/' . $wiki_name .'" title="read the full article on Wikipedia.org" target="blank" class="wikilink">wikipedia.org/wiki/' . $wiki_name . ' </a>';
 		$cat_head.= get_prev_ops($cat[0]->cat_name);
 		$cat_head.= '</div>';
-    $cat_head.= '<div class="category-image">';
+    $cat_head.= '<div class="category-image wp-caption alignnone">';
 		$cat_head.= get_latest_cat_img($cat[0]->cat_name, 'medium');
+		$cat_head.= '<p class="wp-caption-text">';
+		
+		// determines whether the illustration was already edited into Wikipedia, or whther it's a draft:
+		$edit = get_latest_in_cat($cat[0]->cat_name, 'edit');
+		if($edit){
+		  $cat_head.= 'Edited into Wikipedia [ ';
+  		$cat_head.= '<a href="http://wikipedia.org/wiki/' . $wiki_name .'" title="read the full article on Wikipedia.org" target="blank">view article</a> | ';
+  		$cat_head.= '<a href="http://wikipedia.org/wiki/?' . $wiki_name .'&oldid=' . $edit . '" title="read the full article on Wikipedia.org" target="blank">view edit</a> ]';
+		} else {
+		  $cat_head.= 'Latest draft for "' . $article_name . '"';
+		}
+		$cat_head.= '</p>';
 		$cat_head.= '</div>';
 		$cat_head.= '</div>';
 		$cat_head.= '</div>';
@@ -223,8 +249,6 @@ function childtheme_page_title($content){
   return $content;
 }
 
-
-
 function get_prev_ops($cat){
   $args = array(
     'category_name' => $cat,
@@ -246,7 +270,6 @@ function get_prev_ops($cat){
     return "";
   }
 }
-
 
 function child_post_thumb() {
     return array(200,200);
@@ -308,7 +331,7 @@ function childtheme_postfooter() {
           $article_quote = get_latest_in_cat($cat[0]->cat_name, article_quote);
           $wiki_name = get_latest_in_cat($cat[0]->cat_name, wiki_name);
           if ($article_quote){
-            echo '<div class="article-quote">' . $article_quote . '</div><a href="http://wikipedia.org/wiki/' . $wiki_name .'" target="blank" class="wikilink">wikipedia.org/wiki/' . $wiki_name . ' </a>';
+            echo '<div class="article-quote">' . strip_tags($article_quote, '<p><strong><em>') . '</div><a title="read the full article on Wikipedia.org" href="http://wikipedia.org/wiki/' . $wiki_name .'" target="blank" class="wikilink">wikipedia.org/wiki/' . $wiki_name . ' </a>';
           }?>
       <?php } ?>
   		<?php the_tags( __( '<span class="tag-links">', 'sandbox' ), " ", "</span>" ) ?>
@@ -323,6 +346,8 @@ add_filter ('thematic_postfooter', 'childtheme_postfooter');
 
 // ---------------------------------------------------------------- Post navigation:
 
+// We will use this one later...
+
 function new_prev_nav_args() {
   if(is_single()){
     $args = array ('format'              => '%link',
@@ -335,7 +360,7 @@ function new_prev_nav_args() {
   }
 }
 
-add_filter('thematic_previous_post_link_args', 'new_prev_nav_args');
+//add_filter('thematic_previous_post_link_args', 'new_prev_nav_args');
 
 function new_next_nav_args() {
   if(is_single()){
@@ -349,7 +374,7 @@ function new_next_nav_args() {
   }
 }
 
-add_filter('thematic_next_post_link_args', 'new_next_nav_args');
+//add_filter('thematic_next_post_link_args', 'new_next_nav_args');
 
 // ---------------------------------------------------------------- Comments:
 
@@ -399,6 +424,15 @@ function my_callback() {
 }
 add_filter('list_comments_arg', 'my_callback');
 
+
+function my_comment_form_args($args){
+  $extranotes .= '<div id="form-extra-notes" class="form-section"><p><strong>To embed an image or a video</strong> in your comment paste a link to it from Flickr, YouTube (or <abbr title="YouTube, Vimeo, DailyMotion, blip.tv, Viddler, Flickr, Scribd, Photobucket, SmugMug...">other services</abbr>) in a separate line.</p></div>';
+  $args['comment_notes_after'] = $extranotes . $args['comment_notes_after'];
+  return $args;
+}
+
+add_filter('thematic_comment_form_args', 'my_comment_form_args');
+
 // ---------------------------------------------------------------- Widgets:
 
 function child_remove_widget_area() {
@@ -419,10 +453,10 @@ function custom_js(){
       jQuery(".post .article-quote").jTruncate({  
         length: 400,  
         minTrail: 90,  
-        moreText: "[read on]",  
-        lessText: "[fold back]",  
+        moreText: "[ + ]",  
+        lessText: "[ - ]",  
         /* ellipsisText: " (truncated)",   */
-        moreAni: "fast",  
+        /* moreAni: "fast",   */
         lessAni: "fast"
       }); 
     });
