@@ -64,6 +64,11 @@ abbr, acronym {
   border-bottom:1px dotted #777777;
 }
 
+.hide{
+  /* display: none !important; */
+  width: 0 !important;
+}
+
 /* _________________________________________HEADER____________ */
 
 #header{
@@ -263,7 +268,7 @@ abbr, acronym {
     .wp-caption p.wp-caption-text {
       padding: 5px;
       background: none;
-      margin: -22px 10px 10px 0;
+      margin: 0px 10px 10px 0;
       display: block;
       border-bottom: 3px solid #F8F8F8;
     }
@@ -815,7 +820,7 @@ a.fancybox .enlarge{
   text-indent: -200000px;
   display: block;
   margin-right: 0px;
-  margin-bottom: 0;
+  margin-bottom: -22px;
   padding-right: 20px;
   border: 0;
   font-size: 12px;
