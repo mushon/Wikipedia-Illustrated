@@ -36,6 +36,13 @@
 
 // ----------------------------------------------------------------  Helper Functions:
 
+//manu key
+
+function menu_key(){
+  $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "V", "U", "W", "X", "Y", "Z");
+  return($letters);
+}
+
 // Returns the latest value entered to a post in this category:
 function get_latest_in_cat($cat, $key){
   $args = array(
@@ -44,7 +51,9 @@ function get_latest_in_cat($cat, $key){
     'meta_key' => $key
     );
   $myposts = get_posts($args);
-  foreach($myposts as $post) { return get_post_meta($post->ID, $key, true); }
+  foreach($myposts as $post) {
+    return get_post_meta($post->ID, $key, true);
+  }
 }
 
 // Returns the latest value entered to a post in this category:
@@ -91,6 +100,91 @@ function my_image_tag_class($class){
 add_filter('get_image_tag_class','my_image_tag_class');
 */
 
+// ---------------------------------------------------------------- Subscribe Bar:
+
+// This will create your widget area
+function my_widgets_init() {
+    register_sidebar(array(
+       	'name' => 'Header Aside',
+       	'id' => 'header-aside',
+       	'before_widget' => '<li id="%1$s" class="widgetcontainer %2$s">',
+       	'after_widget' => "",
+		'before_title' => "<h3 class=\"widgettitle\">",
+		'after_title' => "</h3>\n",
+    ));
+
+}
+add_action( 'init', 'my_widgets_init' );
+
+// adding the widget area to your child theme
+function my_header_widgets() { ?>
+  
+  <div id="topbar">
+    <div class="container"><?php
+    
+      //aside for all the pages
+      if ( function_exists('dynamic_sidebar') && is_sidebar_active('header-aside') ) {
+          echo '<div id="header-aside" class="aside">'. "\n" . '<ul class="xoxo">' . "\n";
+          dynamic_sidebar('header-aside');
+          echo '' . "\n" . '</div><!-- #header-aside .aside -->'. "\n";
+      }
+      
+  			$user = wp_get_current_user();
+  			//user is logged in, $user->ID will be their ID, etc..			
+  			if ( is_user_logged_in()) {
+  				$username = "<a href='" . wp_login_url() . "'>" . $user->display_name . "</a>" ;
+  			} else {
+  				$username =  wp_loginout('',0);
+  			}
+      
+      $contribute  = "<div id='contribute'>";
+      $contribute .= "  <a href='" . get_site_url() . "/contribute' class='button'>Contribute Your Work</a>";
+      $contribute .= " &bull; " . $username;
+      $contribute .=  "</div>";
+      echo $contribute;
+        ?>
+    </div>
+  </div><?php
+
+  
+}
+add_action('thematic_belowheader', 'my_header_widgets',1);
+
+// --------------------------------------------------------------- Login page:
+
+// custom login for theme
+function childtheme_custom_login() {
+	echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('stylesheet_directory') . '/customlogin.css" />';
+}
+ 
+add_action('login_head', 'childtheme_custom_login');
+
+function childtheme_login_headerurl(){
+  return "http://wikipediaillustrated.org";  
+}
+
+add_filter('login_headerurl', 'childtheme_login_headerurl');
+
+function childtheme_login_headertitle(){
+  return "Back to Wikipedia Illustrated";  
+}
+
+add_filter('login_headertitle', 'childtheme_login_headertitle');
+
+function childtheme_message(){
+  
+  $message  = "<div id='login-message'>";
+  $message .= " <h3>Want to contribute visually?</h3>";
+  $message .= " <ol><li>Read the <a href='" . get_site_url() . "/contribute'>Contribution Guidelines</a></li>";
+  $message .= "   <li>Go to the " . wp_register( '', '', 0) . "</li> area";
+  $message .= "   <li>Or if you're coming back sign in here:";
+  $message .= " </ol>";
+  $message .= "</div>";
+  return $message;  
+}
+
+add_filter('login_message', 'childtheme_message');
+
 // ----------------------------------------------------------------  HEADER:
 
 // Remove description from doctitle:
@@ -98,7 +192,7 @@ add_filter('get_image_tag_class','my_image_tag_class');
 function homeDocTitle($content){
   if ( is_home() || is_front_page() ){
     $content = get_bloginfo('name') . " | Drafting a new path towards visual free culture";
-  } elseif ( is_category() && !is_category('meta') ) {
+  } elseif ( is_category(menu_key()) ) {
     $content = get_bloginfo('name') . " | ";
     $content .= __('Drafts for the Letter "', 'thematic');
     $content .= single_cat_title("", false) . '"';
@@ -136,7 +230,7 @@ function childtheme_header_extension() {
         <div class="list-label">Articles:</div>
         <ul id="letters" class="sf-menu sf-js-enabled">
           <?php
-          $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "V", "U", "W", "X", "Y", "Z");     
+          $letters = menu_key();
           foreach ($letters as $letter) {
             //make the LI item anyway
             $item = "<li class='menu-item menu-item-type-post_type menu-item-" . $letter . "' id='menu-item-" . $letter . "'>";
@@ -168,7 +262,7 @@ function childtheme_header_extension() {
   global $post;
   
   $content = '';
-  if(is_category($letters)) {
+  if(is_category(menu_key())) {
     
     $cat = get_the_category();
     $wiki_name = get_latest_in_cat($cat[0]->cat_name, 'wiki_name');
@@ -225,12 +319,11 @@ function childtheme_header_extension() {
 }	
 add_action('thematic_header','childtheme_header_extension',10);
 
-
 // ---------------------------------------------------------------- Category specific:
 
 function childtheme_page_title($content){
   
-  if (is_category($letters)) {
+  if (is_category(menu_key())) {
     /*note in this case you must get rid of the .= here and replace it with = or else you will get double results. the .= just means that you are adding something on the end of the existing variable and the variable was already defined in the parent function*/
     $content = '<h1 class="page-title">';
     $content .= __('Drafts for the letter', 'thematic');
@@ -287,7 +380,7 @@ function childtheme_content() {
 //add_filter('thematic_content','childtheme_content');
 
 function childtheme_belowheader(){
-  if(is_home()){
+  if(is_home() || !is_paged() ){
     ?>
     <div id="intro">
       <div class="container">
@@ -299,6 +392,17 @@ function childtheme_belowheader(){
 }
 	
 add_action('thematic_belowheader','childtheme_belowheader');
+
+//Exclude the Guest category:
+
+function exclude_category($query) {
+  $ex_cat = '-' . get_category_by_slug( 'guest' )->term_id;
+	if ( $query->is_feed || $query->is_home ) {
+		$query->set('cat', $ex_cat);
+	}
+return $query;
+}
+add_filter('pre_get_posts', 'exclude_category');
 
 // ---------------------------------------------------------------- Post Structure:
 
@@ -313,6 +417,23 @@ add_filter('thematic_postheader_postmeta', 'childtheme_postheader_postmeta');
 function childtheme_postheader($old){
   $new  = $old;
   $new .= '<div class="left-col">';
+	global $post;
+  if (in_category(menu_key()) || in_category(array('guest'))) {
+    $wiki_name = get_post_meta($post->ID, 'wiki_name', true);
+  	// determines whether the illustration was already edited into Wikipedia, or whther it's a draft:
+  	$edit = get_post_meta($post->ID, 'edit', true);
+    $new .= '<p class="status">';
+  	if($edit){
+      $new .= '<a class="done" href="http://wikipedia.org/wiki/' . $wiki_name .'" title="read the full article on Wikipedia.org" target="blank">DONE</a> ';
+  	  $new .= 'Edited into Wikipedia [ ';
+  		$new .= '<a href="http://wikipedia.org/wiki/' . $wiki_name .'" title="read the full article on Wikipedia.org" target="blank">view article</a> | ';
+  		$new .= '<a href="http://wikipedia.org/wiki/?' . $wiki_name .'&oldid=' . $edit . '" title="read the full article on Wikipedia.org" target="blank">view edit</a> ]';
+  	} else {
+      $new .= '<span class="draft">DRAFT</span> ';
+  	  $new .= 'a later version will be contributed to Wikipedia';
+  	}
+    $new .= '</p>';
+  }
   
   return $new;
 }
@@ -324,16 +445,31 @@ function childtheme_postfooter() {
   if(!is_page()){?>
     </div>
   	<div class="entry-utility meta">
-      <?php if(!is_category()){ ?>
-        <div class="cat-links"><?php $cat = get_the_category(); echo '
-        <a href="' . get_category_link($cat[0]->cat_ID) . '"><span>' . $cat[0]->cat_name . ':</span> ' . get_latest_in_cat($cat[0]->cat_name, article_title) ?></a></div>
-          <?php 
+      <?php if(!is_category()){ 
+        $post_id = get_the_id();
+        $cat = get_the_category();
+        if (in_category('guest')) {
+          $article_title = get_post_meta($post_id, 'article_title', true);
+          $article_quote = get_post_meta($post_id, 'article_quote', true);
+          $wiki_name = get_post_meta($post_id, 'wiki_name', true);
+        } elseif(in_category(menu_key())) {
+          $article_title = get_latest_in_cat($cat[0]->cat_name, article_title);
           $article_quote = get_latest_in_cat($cat[0]->cat_name, article_quote);
           $wiki_name = get_latest_in_cat($cat[0]->cat_name, wiki_name);
+        }
+        ?>
+        <div class="cat-links"><?php echo '
+        <a href="' . get_category_link($cat[0]->cat_ID) . '"><span>' . $cat[0]->cat_name . ':</span> ' . $article_title ?></a></div>
+          <?php 
           if ($article_quote){
             echo '<div class="article-quote">' . strip_tags($article_quote, '<p><strong><em>') . '</div><a title="read the full article on Wikipedia.org" href="http://wikipedia.org/wiki/' . $wiki_name .'" target="blank" class="wikilink">wikipedia.org/wiki/' . $wiki_name . ' </a>';
-          }?>
-      <?php } ?>
+          }
+        } 
+        if (in_category(array('guest'))){
+          ?> <p class="post-credit">By <?php the_author_posts_link(); ?> (<?php the_author_posts();?>) </p> <?php;
+        }
+        
+        ?>
   		<?php the_tags( __( '<span class="tag-links">', 'sandbox' ), " ", "</span>" ) ?>
   		<div class="date"><?php the_time('M jS, Y'); ?></div>
   		<div class="comments-link"><?php comments_popup_link( __( 'No Comments', 'sandbox' ), __( '1 Comment', 'sandbox' ), __( '% Comments', 'sandbox' ) ) ?></div>
